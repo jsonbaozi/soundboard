@@ -1,7 +1,7 @@
 {
   "name": "Soundboard",
   "short_name": "SB",
-  "start_url": "/hw4.html",
+  "start_url": "/soundboard.html",
   "theme_color": "#1e88e5",
   "background_color": "#6ab7ff",
   "display": "standalone",

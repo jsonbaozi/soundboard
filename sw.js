@@ -1,6 +1,6 @@
 var sb_strCacheName = 'cache-v2';
 var sb_objUrlsToCache = [
-  '/hw4.html',
+  '/soundboard.html',
   '/noscript.html',
   '/config1.json',
   '/config2.json',
