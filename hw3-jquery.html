@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=noscript.html">
+  </noscript>
+
+  <!-- BEGIN TRACKJS -->
+  <script type="text/javascript">window._trackJs = { token: '9c44b4bb3e8f42bbae4dbf3cb7febe1b' };</script>
+  <script type="text/javascript" src="https://cdn.trackjs.com/releases/current/tracker.js"></script>
+  <!-- END TRACKJS -->
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Soundboard</title>
+  <link rel="stylesheet" href="css/common.css" type="text/css">
+  <link id="theme" rel="stylesheet" href="css/default.css">
+
+  <template id="row">
+    <div class="row justify-content-md-center">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </template>
+
+  <template id="col">
+    <div class="inner">
+      <img>
+    </div>
+  </template>
+  <script src="jquery-3.2.1.min.js"></script>
+</head>
+
+<body>
+  <header>
+    <nav class="navbar-default navbar-collapse">
+      <div class="container-fluid">
+        <div class="nav navbar-nav navbar-right">
+          <a onclick="setCompact()" class="btn btn-default navbar-btn">Compact</a>
+          <a onclick="dropdownFunc('csstheme')" class="btn btn-default navbar-btn">Theme</a>
+          <div class="dropdown-content" id="csstheme">
+            <a href="javascript:changeTheme('default');">Default Theme</a>
+            <a href="javascript:changeTheme('alt');">Alternate Theme</a>
+          </div>
+          <a onclick="dropdownFunc('json_config')" class="btn btn-default navbar-btn">Configuration</a>
+          <div class="dropdown-content" id="json_config">
+            <a href="javascript:changeConfig('config1');">Default Config</a>
+            <a href="javascript:changeConfig('config2');">Alternate Config</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="jumbotron text-center">
+      <div class="container-fluid">
+        <h1>Soundboard</h1>
+        <p>Welcome to the soundboard! Please enjoy!</p>
+      </div>
+    </div>
+
+  </header>
+
+  <main class="container" style="margin:auto;">
+    <img id="loading" class="loading" src="images/load.gif" alt="loading">
+  </main>
+
+  <footer class="text-center">
+    <div class="container-fluid">
+      <p>CSE 134B UCSD 2017&copy;</p>
+      <p>
+        <span id="contact">Contact information:</span><br>
+        Jason Bao:
+        <a href="mailto:jbao@ucsd.edu">jbao@ucsd.edu</a><br>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  if(localStorage.getItem('config') !== null){
+    var config = localStorage.getItem('config');
+  } else {
+    var config = 'config1.json';
+  }
+  sendRequest(config);
+
+  var isCompact = localStorage.getItem('isCompact');
+
+  function setCompact(){
+    if(localStorage.getItem('isCompact') == 'true'){
+      localStorage.setItem('isCompact', 'false');
+    } else {
+      localStorage.setItem('isCompact', 'true');
+    }
+    location.reload();
+  }
+
+  function dropdownFunc(event){
+    document.getElementById(event).classList.toggle('show');
+  }
+
+  window.onclick = function(event) {
+    if(!event.target.matches('.btn.btn-default.navbar-btn')) {
+      document.getElementById('csstheme').classList.toggle('show', false);
+      document.getElementById('json_config').classList.toggle('show', false);
+    }
+  }
+
+  function changeTheme(theme) {
+    var newStyle;
+    switch (theme) {
+      case "alt":
+        newStyle = "css/alt.css";
+        break;
+      default:
+        newStyle = "css/default.css";
+    }
+    $("#theme").attr("href", newStyle);
+  }
+
+  function changeConfig(configuration) {
+    switch (configuration) {
+      case 'config2':
+        localStorage.setItem('config', 'config2.json');
+        location.reload();
+        break;
+      default:
+        localStorage.setItem('config', 'config1.json');
+        location.reload();
+    }
+  }
+
+  function sendRequest(file) {
+    /**
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", file, true);
+    xhr.onreadystatechange = function() {
+      handleResponse(xhr);
+    }
+    xhr.send(null);
+    **/
+    $.getJSON(file,function(jsonObject,statusTxt, xhr){
+      if(statusTxt == "success"){
+        document.getElementById('loading').setAttribute('style', 'visibility:hidden;');
+        var images = jsonObject.images;
+        var sounds = jsonObject.sounds;
+        if(isCompact == 'true'){
+          generateCompactSoundboard(sounds);
+        } else {
+          generateSoundboard(images, sounds);
+        }
+      }
+      else if(statusTxt == "error")
+        alert("Error: " + xhr.status + ": " + xhr.statusText);
+    });
+  }
+
+  /**
+  function handleResponse(xhr) {
+    if(xhr.readyState === 4 && xhr.status === 200) {
+      var response = xhr.responseText;
+      try{
+        var object = JSON.parse(response);
+      }
+      catch(err){
+        trackJs.track('JSON parse error, loading noscript config');
+        alert('System error, loading noscript config');
+        document.location.href = 'noscript.html';
+      }
+      var images = object.images;
+      var sounds = object.sounds;
+      if(isCompact == 'true'){
+        generateCompactSoundboard(sounds);
+      } else {
+        generateSoundboard(images, sounds);
+      }
+    }
+  }
+  **/
+
+  function generateCompactSoundboard(sounds) {
+      /**s
+      var soundList = document.createElement("ul");
+      var sound = document.createElement('li');
+      for(var i = 0; i < 12; i++) {
+        var soundFilename = sounds[i];
+        generateSoundElement(soundFilename);
+        sound.setAttribute('onclick', "document.getElementById('" + soundFilename + "').play()");
+        sound.setAttribute('alt', soundFilename);
+        sound.innerHTML = soundFilename;
+        var temp = document.importNode(sound, true);
+        soundList.appendChild(temp);
+      }
+      var main = document.querySelector("main");
+      document.querySelector('main').appendChild(soundList);
+      **/
+
+      var soundList = $("<ul></ul>");
+      for(var i=0; i<12; i++){
+        var sound = $("<li></li>");
+        var soundFilename= sounds[i];
+        generateSoundElement(soundFilename);
+        var soundQueryName = "#" + soundFilename;
+        sound.on("click",function(){ document.getElementById(soundFilename).play(); });
+        sound.text(soundFilename);
+        sound.appendTo(soundList);
+      }
+      soundList.appendTo("main");
+
+  }
+
+  function generateSoundboard(images, sounds) {
+    ///**
+    if('content' in document.createElement('template')) {
+      var row = document.querySelector('#row');
+      var cols = row.content.querySelectorAll('div');
+      var col = document.querySelector('#col');
+      var sound = col.content.querySelector('img');
+
+
+      for(var i = 0; i < 11; i+=4) {
+        for(var j = 0; j < 4; j++) {
+          var imageFilename = images[i+j];
+          var soundFilename = sounds[i+j];
+
+          generateSoundElement(soundFilename);
+          sound.src = "images/" + imageFilename;
+          sound.setAttribute('onclick', "document.getElementById('" + soundFilename + "').play()");
+          console.log(typeof soundFilename);
+          var c = document.importNode(col.content, true);
+          cols[(i+j)%4+1].classList.add('col-sm-6', 'col-md-3', 'center-block' ,'text-center');
+          cols[(i+j)%4+1].appendChild(c);
+        }
+      }
+
+      var main = document.querySelector("main");
+      var rows = document.importNode(row.content, true);
+      main.appendChild(rows);
+    }
+    //**/
+    /**
+    if('content' in document.createElement('template')) {
+      var row = $("#row");
+
+
+      for(var i = 0; i < 11; i+=4) {
+        var col = $("#col");
+        var sound = $("#col img");
+        for(var j = 0; j < 4; j++) {
+          var cols = $("#row div");
+          var imageFilename = images[i+j];
+          var soundFilename = sounds[i+j];
+
+          generateSoundElement(soundFilename);
+          sound.attr("src" , "images/" + imageFilename);
+          sound.on("click", function(){document.getElementById('" + soundFilename + "').play()};
+
+          var c = document.importNode(col.content, true);
+          cols[(i+j)%4+1].addClass("col-sm-6 col-md-3 center-block text-center");
+          cols[(i+j)%4+1].appendTo(col)
+        }
+      }
+      var rows = row.contents();
+      rows.appendTo("main")
+    }
+    **/
+
+  }
+
+  function generateSoundElement(soundFilename) {
+    /**
+    var audioNode = document.createElement('audio');
+    audioNode.id = soundFilename;
+    audioNode.src = "sounds/" + soundFilename;
+    audioNode.type = "audio/mp3";
+    document.body.appendChild(audioNode);
+    **/
+    $("<audio>").attr({
+        id: soundFilename,
+        src: "sounds/" + soundFilename,
+        type: "audio/mp3"
+    }).appendTo("body")
+  }
+
+
+  </script>
+</body>
+</html>

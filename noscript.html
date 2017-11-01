@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Soundboard</title>
+  <link rel="stylesheet" href="css/common.css" type="text/css">
+  <link rel="stylesheet" href="css/default.css" type="text/css">
+  <style media="screen">
+  .navbar-default {
+    background-color: #1e88e5;
+  }
+
+  a:link {
+    color: black;
+  }
+
+  .jumbotron {
+    background-color: #6ab7ff;
+  }
+
+  .jumbotron p {
+    font-style: italic;
+  }
+
+  body {
+    background-color:#cce3f9;
+  }
+
+  footer {
+    background-color: #6ab7ff;
+    padding: 1rem 0rem;
+  }
+
+  footer>div>p:nth-child(1) {
+    font-weight: bold;
+    font-style: italic;
+  }
+
+  #contact {
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  .col-md-3, .col-sm-6{
+    padding:1rem;
+  }
+
+  .inner p {
+    font-family: inherit;
+    font-weight: 600;
+  }
+
+  .inner {
+    padding: 1rem;
+  }
+
+  button {
+    height: 22rem;
+    vertical-align: top;
+    width: 22rem;
+    border-style: solid;
+    border-radius: 1rem;
+    border-color:  #5c6166;
+    border-width: 1rem;
+  }
+  </style>
+</head>
+
+<body>
+  <audio id="applause" src="sounds/Applause.mp3" preload="auto"></audio>
+  <audio id="charge" src="sounds/Charge.mp3" preload="auto"></audio>
+  <audio id="crash" src="sounds/Crash.mp3" preload="auto"></audio>
+  <audio id="cricket" src="sounds/Cricket.mp3" preload="auto"></audio>
+  <audio id="crybaby" src="sounds/Cry%20Baby.mp3" preload="auto"></audio>
+  <audio id="drumroll" src="sounds/Drumroll.mp3" preload="auto"></audio>
+  <audio id="frog" src="sounds/Frog.mp3" preload="auto"></audio>
+  <audio id="headshake" src="sounds/Head%20Shake.mp3" preload="auto"></audio>
+  <audio id="jiayou" src="sounds/Jiayou.mp3" preload="auto"></audio>
+  <audio id="rimshot" src="sounds/Rimshot.mp3" preload="auto"></audio>
+  <audio id="sadtrombone" src="sounds/Sad%20Trombone.mp3" preload="auto"></audio>
+  <audio id="waow" src="sounds/Waow.mp3" preload="auto"></audio>
+
+  <header>
+    <nav class="navbar-default navbar-collapse">
+      <div class="container-fluid">
+        <div class="nav navbar-nav navbar-right">
+          <a href="#login" class="btn btn-default navbar-btn">Login</a>
+          <a href="#settings" class="btn btn-default navbar-btn">Settings</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="jumbotron text-center">
+      <div class="container-fluid">
+        <h1>Soundboard</h1>
+        <p>Welcome to the soundboard! Please enjoy!</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="margin:auto; ">
+    <div class="row justify-content-md-center">
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/applause.png)"
+                  onclick="document.getElementById('applause').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/charge.jpg)"
+                  onclick="document.getElementById('charge').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/crash.jpg)"
+                  onclick="document.getElementById('crash').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/cricket.jpg)"
+                  onclick="document.getElementById('cricket').play();">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/crybaby.jpg)"
+                  onclick="document.getElementById('crybaby').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/drumroll.png)"
+                  onclick="document.getElementById('drumroll').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/frog.jpg)"
+                  onclick="document.getElementById('frog').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/headshake.jpg)"
+                  onclick="document.getElementById('headshake').play();">
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-md-center">
+      <div class="col-sm-6 col-md-3  center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/jiayou.jpg)"
+                  onclick="document.getElementById('jiayou').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3  center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/rimshot.jpg)"
+                  onclick="document.getElementById('rimshot').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3  center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/trombone.jpg)"
+                  onclick="document.getElementById('sadtrombone').play();">
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 center-block text-center">
+        <div class="inner">
+          <button style="background: url(images/waow.png)"
+                  onclick="document.getElementById('waow').play();">
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="text-center">
+    <div class="container-fluid">
+      <p>CSE 134B UCSD &copy; 2017</p>
+      <p>
+        <span id="contact">Contact information:</span><br>
+        Jason Bao:
+        <a href="mailto:jbao@ucsd.edu">jbao@ucsd.edu</a><br>
+      </p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=noscript.html">
+  </noscript>
+
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1e88e5">
+  <title>Soundboard</title>
+  <link rel="stylesheet" href="css/common.css" type="text/css">
+  <link id="theme" rel="stylesheet" href="css/default.css">
+  <link rel="manifest" href="manifest.json">
+
+  <script type="text/javascript">
+  var sb_strTheme = localStorage.getItem('theme');
+  if(sb_strTheme == 'alt') {
+    document.getElementById('theme').href = "css/alt.css";
+  }
+  </script>
+
+  <!-- BEGIN TRACKJS -->
+  <script type="text/javascript">window._trackJs = { token: '9c44b4bb3e8f42bbae4dbf3cb7febe1b' };</script>
+  <script type="text/javascript" src="https://cdn.trackjs.com/releases/current/tracker.js"></script>
+  <!-- END TRACKJS -->
+
+  <template id="row">
+    <div class="row justify-content-md-center">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </template>
+
+  <template id="col">
+    <div class="inner">
+      <img>
+    </div>
+  </template>
+</head>
+
+<body onload="sb_onLoad()">
+  <header>
+    <nav class="navbar-default navbar-collapse">
+      <div class="container-fluid">
+        <div class="nav navbar-nav navbar-right">
+          <a onclick="sb_setCompact()" class="btn btn-default navbar-btn">Compact</a>
+          <a onclick="sb_dropdownFunc('csstheme')" class="btn btn-default navbar-btn">Theme</a>
+          <div class="dropdown-content theme" id="csstheme">
+            <a href="javascript:sb_changeTheme('default');">Blue</a>
+            <a href="javascript:sb_changeTheme('alt');">Red</a>
+          </div>
+          <a onclick="sb_dropdownFunc('json_config')" class="btn btn-default navbar-btn">Sounds</a>
+          <div class="dropdown-content config" id="json_config">
+            <a href="javascript:sb_changeConfig('config1');">Random</a>
+            <a href="javascript:sb_changeConfig('config2');">LoL</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="jumbotron text-center">
+      <div class="container-fluid">
+        <h1 id="title">Soundboard</h1>
+        <p>Welcome to the soundboard! Please enjoy!</p>
+      </div>
+    </div>
+
+  </header>
+
+  <main class="container" style="margin:auto;">
+    <img id="loading" class="loading" src="images/load.gif" alt="loading">
+  </main>
+
+  <footer class="text-center">
+    <div class="container-fluid">
+      <p>CSE 134B UCSD &copy; 2017</p>
+      <p>
+        <span id="contact">Contact information:</span><br>
+        Jason Bao:
+        <a href="mailto:jbao@ucsd.edu">jbao@ucsd.edu</a><br>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+  "use strict";
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('/sw.js').then(function(registration) {
+        console.log('ServiceWorker registration successful with scope: ' + registration.scope);
+      }, function(err) {
+        console.log('ServiceWorker registration failed: ' + err);
+      });
+    });
+  }
+
+  var TOWrapper = { };
+  TOWrapper.perfData = window.performance.timing;
+  TOWrapper.connectTime = TOWrapper.perfData.responseEnd - TOWrapper.perfData.requestStart;
+  console.log('connect time = '+TOWrapper.connectTime);
+  TOWrapper.timeoutTime = TOWrapper.connectTime * 2;
+
+  if(localStorage.getItem('config') !== null) {
+    var sb_objConfig = localStorage.getItem('config');
+  } else {
+    var sb_objConfig = 'config1.json';
+  }
+  sb_sendRequest(sb_objConfig);
+
+  var sb_strIsCompact = localStorage.getItem('isCompact');
+
+  function sb_setCompact() {
+    if(localStorage.getItem('isCompact') == 'true') {
+      localStorage.setItem('isCompact', 'false');
+    } else {
+      localStorage.setItem('isCompact', 'true');
+    }
+    location.reload();
+  }
+
+  function sb_dropdownFunc(config) {
+    if((config === "csstheme") || (config === "json_config")) {
+      document.getElementById(config).classList.toggle('show');
+    }
+    else {
+      trackJs.track('Error: Wrong dropdown parameter.');
+    }
+  }
+
+  window.onclick = function(event) {
+    if(!event.target.matches('.btn.btn-default.navbar-btn')) {
+      document.getElementById('csstheme').classList.toggle('show', false);
+      document.getElementById('json_config').classList.toggle('show', false);
+    }
+  }
+
+  function sb_changeTheme(strTheme) {
+    if((strTheme === "alt") || (strTheme === "default")) {
+      var strHref;
+      switch (strTheme) {
+        case "alt":
+        localStorage.setItem('theme', 'alt');
+        strHref = "css/alt.css";
+        break;
+        default:
+        localStorage.setItem('theme', 'default')
+        strHref = "css/default.css";
+      }
+      document.getElementById("theme").href = strHref;
+    }
+    else {
+      trackJs.track('Error: Incorrect theme parameter.');
+    }
+  }
+
+  function sb_changeConfig(strConfiguration) {
+    if((strConfiguration === "config1") || (strConfiguration === "config2")) {
+      switch(strConfiguration) {
+        case "config2":
+        if(localStorage.getItem('config') !== "config2.json") {
+          localStorage.setItem('config', 'config2.json');
+          location.reload();
+        }
+        break;
+        default:
+        if(localStorage.getItem('config') !== "config1.json") {
+          localStorage.setItem('config', 'config1.json');
+          location.reload();
+        }
+      }
+    }
+    else {
+      trackJs.track('Error: Incorrect configuration parameter.');
+    }
+  }
+
+  function sb_timeOutConfirmation() {
+    trackJs.track('JSON packet request timed out');
+    console.log('Connection timed out with timeout of '+TOWrapper.timeoutTime);
+    if(TOWrapper.timeoutTime < TOWrapper.connectTime*4) {
+      TOWrapper.timeoutTime *= 2;
+      sb_sendRequest(sb_objConfig);
+      return true;
+    } else {
+      var retVal = confirm('Request timed out. Would you like to try again?');
+      if (retVal == true) {
+        sb_sendRequest(sb_objConfig);
+        TOWrapper.timeoutTime = TOWrapper.connectTime*2;
+        return true;
+      }
+      else {
+        document.location.href = 'noscript.html';
+        return false;
+      }
+    }
+  }
+
+  function sb_sendRequest(strFile) {
+    if((typeof strFile) == (typeof "string")) {
+      var objXhr = new XMLHttpRequest();
+      objXhr.open('GET', strFile, true);
+      objXhr.onreadystatechange = function() {
+        sb_handleResponse(objXhr);
+      }
+      objXhr.onloadend = function() {
+        if (objXhr.status == 404) {
+          alert(strFile + ' replied 404');
+        }
+        if (objXhr.status == 500) {
+          alert(strFile + ' replied 500');
+        }
+      }
+      objXhr.send(null);
+      TOWrapper.xhrTimeout = setTimeout(function() { sb_ajaxTimeout(objXhr); }, TOWrapper.timeoutTime);
+    }
+    else {
+      trackJs.track('Error: Incorrect type of file parameter.');
+    }
+  }
+
+  function sb_ajaxTimeout(objXhr) {
+    if(typeof objXhr == typeof null) {
+      objXhr.abort();
+      sb_timeOutConfirmation();
+    }
+  }
+
+  function sb_handleResponse(objXhr) {
+    if(typeof objXhr == typeof null) {
+      if(objXhr.readyState === 4 && objXhr.status === 200) {
+        clearTimeout(TOWrapper.xhrTimeout);
+        var strResponse = objXhr.responseText;
+        try {
+          var objObject = JSON.parse(strResponse);
+        }
+        catch(err) {
+          trackJs.track('JSON parse error, loading noscript config');
+          alert('System error, loading noscript config');
+          document.location.href = 'noscript.html';
+        }
+        var strArrImages = objObject.images;
+        var strArrSounds = objObject.sounds;
+
+        document.getElementById('title').innerHTML = objObject.title;
+
+        if(sb_strIsCompact == 'true') {
+          sb_generateCompactSoundboard(strArrSounds);
+        } else {
+          sb_generateSoundboard(strArrImages, strArrSounds);
+        }
+      }
+    }
+    else {
+      trackJs.track('Error: Incorrect type of xhr parameter.');
+    }
+  }
+
+  function sb_generateCompactSoundboard(objArrSounds) {
+    if(typeof objArrSounds == typeof null) {
+      var elemSoundList = document.createElement("ul");
+      var elemSound = document.createElement('li');
+      var numSounds = objArrSounds.length;
+      for(var i = 0; i < numSounds-1; i++) {
+        var strSoundFilename = objArrSounds[i];
+        var audioNode = sb_generateSoundElement(strSoundFilename, true);
+        elemSound.innerHTML = strSoundFilename.substring(0, strSoundFilename.length-4);
+        var nodeTemp = document.importNode(elemSound, true);
+        elemSoundList.appendChild(nodeTemp);
+        elemSoundList.appendChild(audioNode);
+      }
+      document.querySelector('main').appendChild(elemSoundList);
+    }
+    else {
+      trackJs.track('Error: Incorrect type of sound parameter for compact.');
+    }
+  }
+
+  function sb_generateSoundboard(objArrImages, objArrSounds) {
+    if((typeof objArrImages == typeof null) || (typeof objArrSounds == typeof null)) {
+      if('content' in document.createElement('template')) {
+        var elemRow = document.querySelector('#row');
+        var elemArrayCols = elemRow.content.querySelectorAll('div');
+        var elemCol = document.querySelector('#col');
+        var elemSound = elemCol.content.querySelector('img');
+        var numSounds = objArrSounds.length;
+        for(var i = 0; i < numSounds-1; i+=4) {
+          for(var j = 0; j < 4; j++) {
+            var strImageFilename = objArrImages[i+j];
+            var strSoundFilename = objArrSounds[i+j];
+
+            sb_generateSoundElement(strSoundFilename, false);
+            elemSound.setAttribute('src', 'images/' + strImageFilename);
+            elemSound.setAttribute('alt', strImageFilename);
+            elemSound.setAttribute('onclick', 'document.getElementById("' + strSoundFilename + '").play()');
+
+            var nodeC = document.importNode(elemCol.content, true);
+            elemArrayCols[(i+j)%4+1].classList.add('col-sm-6', 'col-md-3', 'center-block' ,'text-center');
+            elemArrayCols[(i+j)%4+1].appendChild(nodeC);
+          }
+        }
+
+        var elemMain = document.querySelector('main');
+        var nodeRows = document.importNode(elemRow.content, true);
+        elemMain.appendChild(nodeRows);
+      }
+    }
+    else {
+      trackJs.track('Error: Incorrect types of sb parameters.');
+    }
+  }
+
+  function sb_generateSoundElement(strSoundFilename, boolIsCompact) {
+    if(typeof strSoundFilename == typeof "string") {
+      var audioNode = document.createElement('audio');
+      audioNode.id = strSoundFilename;
+      audioNode.src = "sounds/" + strSoundFilename;
+      audioNode.type = "audio/mp3";
+      if(boolIsCompact) {
+        audioNode.controls = "controls";
+        return audioNode;
+      }
+      document.body.appendChild(audioNode);
+    }
+    else {
+      trackJs.track('Error: Incorrect type of soundfile parameter.');
+    }
+  }
+
+  window.onload = function() {
+    document.getElementById('loading').setAttribute('style', 'visibility:hidden;');
+  }
+
+  </script>
+</body>
+</html>

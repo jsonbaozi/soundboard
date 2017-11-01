@@ -1,0 +1,57 @@
+.navbar-default {
+  background-color: #1e88e5;
+}
+
+a:link {
+  color: black;
+}
+
+.jumbotron {
+  background-color: #6ab7ff;
+}
+
+.jumbotron p {
+  font-style: italic;
+}
+
+body {
+  background-color:#cce3f9;
+}
+
+footer {
+  background-color: #6ab7ff;
+  padding: 1rem 0rem;
+}
+
+footer>div>p:nth-child(1) {
+  font-weight: bold;
+  font-style: italic;
+}
+
+#contact {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.col-md-3, .col-sm-6{
+  padding:1rem;
+}
+
+.inner {
+  padding: 1rem;
+}
+
+img {
+  height: 22rem;
+  vertical-align: top;
+  width: 22rem;
+  border-style: solid;
+  border-radius: 1rem;
+  border-color:  #5c6166;
+  border-width: 1rem;
+  cursor: pointer;
+}
+
+.show {
+  display: block;
+}
